@@ -1,0 +1,22 @@
+.env
+.env*.local
+
+node_modules/
+.next/
+out/
+dist/
+build/
+
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.vercel/
+coverage/
+
+# Local planning/reference files that are not needed for deployment
+method.jpg
+产品需求文档.md
