@@ -11,16 +11,18 @@ export default async function ListingsPage({
 }) {
   const params = await searchParams;
   const schoolId = typeof params.schoolId === "string" ? params.schoolId : undefined;
-  const minRent = typeof params.minRent === "string" ? params.minRent : undefined;
   const maxRent = typeof params.maxRent === "string" ? params.maxRent : undefined;
   const listingType = typeof params.listingType === "string" ? params.listingType : undefined;
+  const housingType = typeof params.housingType === "string" ? params.housingType : undefined;
+  const moveInDate = typeof params.moveInDate === "string" ? params.moveInDate : undefined;
   const sort = typeof params.sort === "string" ? params.sort : undefined;
 
   const listings = await getPublicListings({
     schoolId,
-    minRent: minRent ? Number(minRent) : undefined,
     maxRent: maxRent ? Number(maxRent) : undefined,
     listingType,
+    housingType,
+    moveInDate,
     sort,
   });
   const schools = await getSchools();
@@ -36,13 +38,20 @@ export default async function ListingsPage({
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-8">
         <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">Housing Search</p>
-        <h1 className="mt-3 text-4xl font-semibold text-slate-900">学校周边房源列表</h1>
+        <h1 className="mt-3 text-4xl font-semibold text-slate-900">浏览房源</h1>
         <p className="mt-3 max-w-2xl text-slate-600">
-          按学校、预算和房源类型快速筛选，只展示已经通过审核的公开房源。
+          按学校、价格、房型、出租类型和可入住时间快速筛选已审核房源。
         </p>
       </div>
 
-      <FilterBar schoolId={schoolId} minRent={minRent} maxRent={maxRent} listingType={listingType} sort={sort} />
+      <FilterBar
+        schoolId={schoolId}
+        maxRent={maxRent}
+        listingType={listingType}
+        housingType={housingType}
+        moveInDate={moveInDate}
+        sort={sort}
+      />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         {listings.length > 0 ? (

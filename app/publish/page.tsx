@@ -25,10 +25,10 @@ export default async function PublishPage() {
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
       <div className="mb-8">
-        <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">Publish</p>
-        <h1 className="mt-3 text-4xl font-semibold text-slate-900">发布房源信息</h1>
+        <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">Post</p>
+        <h1 className="mt-3 text-4xl font-semibold text-slate-900">发布房源</h1>
         <p className="mt-3 max-w-3xl text-slate-600">
-          第一版提交后统一进入待审核状态，管理员审核通过后才会在公开列表中展示。
+          提交房源信息后会进入审核，通过后展示在房源列表中。
         </p>
       </div>
       <PublishForm schools={schools} />

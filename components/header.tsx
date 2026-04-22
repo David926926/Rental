@@ -3,9 +3,8 @@ import { getSessionUser } from "@/lib/session";
 
 const navItems = [
   { href: "/", label: "首页" },
-  { href: "/listings", label: "我要找房" },
-  { href: "/publish", label: "我要出租" },
-  { href: "/admin/listings", label: "后台审核" },
+  { href: "/listings", label: "浏览房源" },
+  { href: "/publish", label: "发布房源" },
 ];
 
 export async function Header() {

@@ -1,12 +1,27 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ContactForm } from "@/components/contact-form";
-import { FavoriteButton } from "@/components/favorite-button";
-import { ReportForm } from "@/components/report-form";
-import { getListingById, getSchools, getUserById } from "@/lib/repository";
+import { ListingContactActions } from "@/components/listing-contact-actions";
+import { getListingById, getSchools } from "@/lib/repository";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+function rentalTypeLabel(type: string) {
+  return type === "shared" ? "单间" : "整套";
+}
+
+function subleaseLabel(value?: string) {
+  if (value === "yes") return "Yes";
+  if (value === "undecided") return "待确认";
+  return "未填写";
+}
+
+function priceRange(min?: number, max?: number) {
+  if (typeof min === "number" && typeof max === "number") return `${formatCurrency(min)} - ${formatCurrency(max)}`;
+  if (typeof min === "number") return `${formatCurrency(min)} 起`;
+  if (typeof max === "number") return `最高 ${formatCurrency(max)}`;
+  return "未填写";
+}
 
 export default async function ListingDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -16,63 +31,77 @@ export default async function ListingDetailPage({ params }: { params: Promise<{ 
   }
 
   const school = (await getSchools()).find((item) => item.id === listing.schoolId);
-  const publisher = await getUserById(listing.publisherId);
+  const images = listing.images.length > 0 ? listing.images.slice(0, 9) : [];
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12">
-      <div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">
-        <div className="space-y-6">
-          <div className="relative h-[420px] overflow-hidden rounded-[2rem]">
-            <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
+    <div className="mx-auto max-w-6xl px-6 py-10">
+      <section className="grid gap-4">
+        <div className="relative h-[520px] overflow-hidden rounded-[2rem] bg-slate-100">
+          <Image src={images[0]} alt={listing.title} fill priority className="object-cover" />
+        </div>
+        {images.length > 1 ? (
+          <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-4">
+            {images.slice(1).map((image, index) => (
+              <div key={image} className="relative h-32 overflow-hidden rounded-2xl bg-slate-100">
+                <Image src={image} alt={`${listing.title} image ${index + 2}`} fill className="object-cover" />
+              </div>
+            ))}
           </div>
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">{school?.name ?? "未绑定学校"}</p>
-                <h1 className="mt-3 text-3xl font-semibold text-slate-900">{listing.title}</h1>
-                <p className="mt-2 text-slate-600">{listing.city} · {listing.area} · {listing.address}</p>
-              </div>
-              <div className="rounded-3xl bg-emerald-50 px-5 py-4 text-right">
-                <p className="text-sm text-emerald-700">月租金</p>
-                <p className="text-3xl font-bold text-emerald-800">{formatCurrency(listing.rent)}</p>
-              </div>
-            </div>
-            <div className="mt-6 grid gap-4 md:grid-cols-3">
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">入住时间</p>
-                <p className="mt-1 font-medium text-slate-900">{formatDate(listing.moveInDate)}</p>
-              </div>
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">租期</p>
-                <p className="mt-1 font-medium text-slate-900">{listing.leaseMonths} 个月</p>
-              </div>
-              <div className="rounded-3xl bg-slate-50 p-4">
-                <p className="text-sm text-slate-500">押金</p>
-                <p className="mt-1 font-medium text-slate-900">{formatCurrency(listing.deposit)}</p>
-              </div>
-            </div>
-            <div className="mt-6 space-y-3">
-              <h2 className="text-xl font-semibold text-slate-900">房源描述</h2>
-              <p className="leading-8 text-slate-600">{listing.description}</p>
-            </div>
+        ) : null}
+      </section>
+
+      <section className="mt-8 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <div className="flex flex-wrap items-start justify-between gap-5">
+          <div>
+            <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">{school?.name ?? "未绑定学校"}</p>
+            <h1 className="mt-3 text-4xl font-semibold text-slate-900">{listing.title}</h1>
+            <p className="mt-3 text-slate-600">{listing.city} · {listing.area} · {listing.address}</p>
+          </div>
+          <div className="rounded-3xl bg-emerald-50 px-6 py-4 text-right">
+            <p className="text-sm text-emerald-700">价格</p>
+            <p className="text-3xl font-bold text-emerald-800">{formatCurrency(listing.rent)}</p>
           </div>
         </div>
 
-        <aside className="space-y-4">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-slate-900">发布者信息</h2>
-            <div className="mt-4 space-y-2 text-sm text-slate-600">
-              <p><span className="font-medium text-slate-900">姓名：</span>{publisher?.name}</p>
-              <p><span className="font-medium text-slate-900">邮箱：</span>{publisher?.email}</p>
-              <p><span className="font-medium text-slate-900">联系方式：</span>{listing.contactMethod}</p>
-              <p><span className="font-medium text-slate-900">认证状态：</span>{publisher?.verificationStatus ?? "unverified"}</p>
-            </div>
+        <div className="mt-6 grid gap-4 md:grid-cols-5">
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">区域</p>
+            <p className="mt-1 font-semibold text-slate-900">{listing.area}</p>
           </div>
-          <FavoriteButton listingId={listing.id} />
-          <ContactForm listingId={listing.id} />
-          <ReportForm listingId={listing.id} />
-        </aside>
-      </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">可入住时间</p>
+            <p className="mt-1 font-semibold text-slate-900">{formatDate(listing.moveInDate)}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">房型</p>
+            <p className="mt-1 font-semibold text-slate-900">{listing.housingType ?? "未填写"}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">出租类型</p>
+            <p className="mt-1 font-semibold text-slate-900">{rentalTypeLabel(listing.type)}</p>
+          </div>
+          <div className="rounded-3xl bg-slate-50 p-4">
+            <p className="text-sm text-slate-500">官方转租状态</p>
+            <p className="mt-1 font-semibold text-slate-900">{subleaseLabel(listing.officialSublease)}</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-slate-900">房源描述</h2>
+        <p className="mt-4 leading-8 text-slate-600">{listing.description}</p>
+      </section>
+
+      <section className="mt-6 rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="text-2xl font-semibold text-slate-900">可接受价格范围</h2>
+        <p className="mt-4 text-xl font-semibold text-slate-900">
+          {priceRange(listing.acceptableMinPrice, listing.acceptableMaxPrice)}
+        </p>
+      </section>
+
+      <section className="mt-6">
+        <ListingContactActions contactMethod={listing.contactMethod} />
+      </section>
     </div>
   );
 }

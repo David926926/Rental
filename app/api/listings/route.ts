@@ -27,7 +27,17 @@ function dateOrToday(value: unknown) {
 
 function listingTypeOrDefault(value: unknown): ListingType {
   const type = text(value);
-  return type === "entire" || type === "shared" || type === "sublet" ? type : "sublet";
+  return type === "shared" || type === "sublet" ? type : "sublet";
+}
+
+function imageUrlsOrDefault(value: unknown) {
+  if (Array.isArray(value)) {
+    const urls = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    if (urls.length > 0) return urls.slice(0, 9);
+  }
+
+  const singleUrl = text(value);
+  return singleUrl ? [singleUrl] : [];
 }
 
 export async function GET(request: Request) {
@@ -40,6 +50,7 @@ export async function GET(request: Request) {
     maxRent: url.searchParams.get("maxRent") ? Number(url.searchParams.get("maxRent")) : undefined,
     moveInDate: url.searchParams.get("moveInDate") ?? undefined,
     listingType: url.searchParams.get("listingType") ?? undefined,
+    housingType: url.searchParams.get("housingType") ?? undefined,
     sort: url.searchParams.get("sort") ?? undefined,
   });
   return NextResponse.json({ data: listings });
@@ -56,6 +67,7 @@ export async function POST(request: Request) {
   const schoolId = text(payload.schoolId) || schools[0]?.id || "nyu";
   const contactEmail = text(payload.contactEmail) || "未填写";
   const contactWechat = text(payload.contactWechat) || "未填写";
+  const imageUrls = imageUrlsOrDefault(payload.imageUrls);
 
   try {
     await createListing({
@@ -67,6 +79,11 @@ export async function POST(request: Request) {
       schoolId,
       rent: numberOrDefault(payload.rent, 0),
       distanceToSchool: optionalNumber(payload.distanceToSchool),
+      housingType: text(payload.housingType) || undefined,
+      officialSublease: text(payload.officialSublease) || undefined,
+      acceptableMinPrice: optionalNumber(payload.acceptableMinPrice),
+      acceptableMaxPrice: optionalNumber(payload.acceptableMaxPrice),
+      petPolicy: text(payload.petPolicy) || undefined,
       deposit: 0,
       moveInDate: dateOrToday(payload.moveInDate),
       availableUntil: text(payload.availableUntil) || undefined,
@@ -78,10 +95,10 @@ export async function POST(request: Request) {
       type: listingTypeOrDefault(payload.type),
       contactMethod: `邮箱 ${contactEmail} / 微信 ${contactWechat}`,
       publisherId: session.id,
-      images: [
-        text(payload.imageUrl) ||
-          "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80",
-      ],
+      images:
+        imageUrls.length > 0
+          ? imageUrls
+          : ["https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1200&q=80"],
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {

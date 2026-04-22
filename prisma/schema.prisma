@@ -73,6 +73,11 @@ model Listing {
   address         String
   rent            Int
   distanceToSchool Float?
+  housingType     String?
+  officialSublease String?
+  acceptableMinPrice Int?
+  acceptableMaxPrice Int?
+  petPolicy       String?
   deposit         Int
   moveInDate      DateTime
   availableUntil  DateTime?

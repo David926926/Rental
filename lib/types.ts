@@ -38,6 +38,11 @@ export type Listing = {
   schoolId: string;
   rent: number;
   distanceToSchool?: number;
+  housingType?: string;
+  officialSublease?: string;
+  acceptableMinPrice?: number;
+  acceptableMaxPrice?: number;
+  petPolicy?: string;
   deposit: number;
   moveInDate: string;
   availableUntil?: string;

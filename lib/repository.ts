@@ -21,6 +21,7 @@ type ListingFilters = {
   leaseType?: string;
   moveInDate?: string;
   listingType?: string;
+  housingType?: string;
   sort?: string;
   status?: ListingStatus;
 };
@@ -115,6 +116,11 @@ function mapListing(listing: {
   schoolId: string;
   rent: number;
   distanceToSchool: number | null;
+  housingType: string | null;
+  officialSublease: string | null;
+  acceptableMinPrice: number | null;
+  acceptableMaxPrice: number | null;
+  petPolicy: string | null;
   deposit: number;
   moveInDate: Date;
   availableUntil: Date | null;
@@ -140,6 +146,11 @@ function mapListing(listing: {
     schoolId: listing.schoolId,
     rent: listing.rent,
     distanceToSchool: listing.distanceToSchool ?? undefined,
+    housingType: listing.housingType ?? undefined,
+    officialSublease: listing.officialSublease ?? undefined,
+    acceptableMinPrice: listing.acceptableMinPrice ?? undefined,
+    acceptableMaxPrice: listing.acceptableMaxPrice ?? undefined,
+    petPolicy: listing.petPolicy ?? undefined,
     deposit: listing.deposit,
     moveInDate: listing.moveInDate.toISOString(),
     availableUntil: listing.availableUntil?.toISOString(),
@@ -255,8 +266,7 @@ export async function getSchools(): Promise<School[]> {
   }
 
   return Array.from(merged.values()).sort((a, b) => {
-    const cityCompare = a.city.localeCompare(b.city);
-    return cityCompare === 0 ? a.name.localeCompare(b.name) : cityCompare;
+    return a.name.localeCompare(b.name);
   });
 }
 
@@ -328,6 +338,7 @@ export async function getListings(filters: ListingFilters = {}): Promise<Listing
       ...(typeof filters.minRent === "number" && !Number.isNaN(filters.minRent) ? { rent: { gte: filters.minRent } } : {}),
       ...(typeof filters.maxRent === "number" && !Number.isNaN(filters.maxRent) ? { rent: { lte: filters.maxRent } } : {}),
       ...(filters.listingType ? { type: toDbListingType(filters.listingType as Listing["type"]) } : {}),
+      ...(filters.housingType ? { housingType: filters.housingType } : {}),
       ...(filters.moveInDate ? { moveInDate: { gte: new Date(filters.moveInDate) } } : {}),
     },
     include: {
@@ -379,6 +390,11 @@ export async function createListing(
       schoolId: input.schoolId,
       rent: input.rent,
       distanceToSchool: input.distanceToSchool ?? null,
+      housingType: input.housingType ?? null,
+      officialSublease: input.officialSublease ?? null,
+      acceptableMinPrice: input.acceptableMinPrice ?? null,
+      acceptableMaxPrice: input.acceptableMaxPrice ?? null,
+      petPolicy: input.petPolicy ?? null,
       deposit: input.deposit,
       moveInDate: new Date(input.moveInDate),
       availableUntil: input.availableUntil ? new Date(input.availableUntil) : null,

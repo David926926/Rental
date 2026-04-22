@@ -14,50 +14,55 @@ function getFileExtension(file: File) {
 }
 
 export async function POST(request: Request) {
-  const session = await getSessionUser();
-  if (!session) {
-    return NextResponse.json({ error: "请先登录后再上传图片" }, { status: 401 });
-  }
+  try {
+    const session = await getSessionUser();
+    if (!session) {
+      return NextResponse.json({ error: "请先登录后再上传图片" }, { status: 401 });
+    }
 
-  const formData = await request.formData();
-  const file = formData.get("file");
+    const formData = await request.formData();
+    const file = formData.get("file");
 
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: "请选择要上传的图片文件" }, { status: 400 });
-  }
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: "请选择要上传的图片文件" }, { status: 400 });
+    }
 
-  if (!ALLOWED_TYPES.has(file.type)) {
-    return NextResponse.json({ error: "仅支持 JPG、PNG、WEBP 图片" }, { status: 400 });
-  }
+    if (!ALLOWED_TYPES.has(file.type)) {
+      return NextResponse.json({ error: "仅支持 JPG、PNG、WEBP 图片" }, { status: 400 });
+    }
 
-  if (file.size > MAX_FILE_SIZE) {
-    return NextResponse.json({ error: "图片大小不能超过 5MB" }, { status: 400 });
-  }
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: "图片大小不能超过 5MB" }, { status: 400 });
+    }
 
-  const arrayBuffer = await file.arrayBuffer();
-  const path = `listings/${session.id}/${Date.now()}-${crypto.randomUUID()}.${getFileExtension(file)}`;
-  const supabaseServer = getSupabaseServer();
+    const arrayBuffer = await file.arrayBuffer();
+    const path = `listings/${session.id}/${Date.now()}-${crypto.randomUUID()}.${getFileExtension(file)}`;
+    const supabaseServer = getSupabaseServer();
 
-  const { error: uploadError } = await supabaseServer.storage
-    .from(storageBucketName)
-    .upload(path, arrayBuffer, {
-      contentType: file.type,
-      upsert: false,
-      cacheControl: "3600",
+    const { error: uploadError } = await supabaseServer.storage
+      .from(storageBucketName)
+      .upload(path, arrayBuffer, {
+        contentType: file.type,
+        upsert: false,
+        cacheControl: "3600",
+      });
+
+    if (uploadError) {
+      console.error(uploadError);
+      return NextResponse.json({ error: "上传图片失败，请稍后重试" }, { status: 500 });
+    }
+
+    const { data } = supabaseServer.storage.from(storageBucketName).getPublicUrl(path);
+
+    return NextResponse.json({
+      message: "图片上传成功",
+      data: {
+        path,
+        publicUrl: data.publicUrl,
+      },
     });
-
-  if (uploadError) {
-    console.error(uploadError);
-    return NextResponse.json({ error: "上传图片失败，请稍后重试" }, { status: 500 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: "图片上传服务暂时不可用，请稍后重试。" }, { status: 500 });
   }
-
-  const { data } = supabaseServer.storage.from(storageBucketName).getPublicUrl(path);
-
-  return NextResponse.json({
-    message: "图片上传成功",
-    data: {
-      path,
-      publicUrl: data.publicUrl,
-    },
-  });
 }
