@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DatePickerField } from "@/components/date-picker-field";
 import type { School } from "@/lib/types";
 
 const MAX_IMAGE_COUNT = 9;
@@ -86,6 +87,7 @@ export function PublishForm({ schools }: { schools: School[] }) {
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState("");
+  const [datePickerResetKey, setDatePickerResetKey] = useState(0);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -163,6 +165,7 @@ export function PublishForm({ schools }: { schools: School[] }) {
     setUploadProgress("");
     setMessage(data.message ?? "Submitted successfully");
     event.currentTarget.reset();
+    setDatePickerResetKey((current) => current + 1);
   }
 
   return (
@@ -191,8 +194,19 @@ export function PublishForm({ schools }: { schools: School[] }) {
           <fieldset className="rounded-2xl border border-violet-200 px-4 py-3">
             <legend className="px-2 text-sm font-medium text-slate-500">Availability</legend>
             <div className="grid gap-3 md:grid-cols-2">
-              <input name="moveInDate" type="date" aria-label="Start date" className="rounded-xl border border-violet-200 px-3 py-2 focus:border-violet-500 focus:outline-none" />
-              <input name="availableUntil" type="date" aria-label="End date" className="rounded-xl border border-violet-200 px-3 py-2 focus:border-violet-500 focus:outline-none" />
+              <DatePickerField
+                key={`move-in-${datePickerResetKey}`}
+                name="moveInDate"
+                ariaLabel="Start date"
+                placeholder="Start date"
+              />
+              <DatePickerField
+                key={`available-until-${datePickerResetKey}`}
+                name="availableUntil"
+                ariaLabel="End date"
+                placeholder="End date"
+                popoverAlign="right"
+              />
             </div>
           </fieldset>
           <select name="type" className="rounded-2xl border border-violet-200 px-4 py-3 focus:border-violet-500 focus:outline-none" defaultValue="">

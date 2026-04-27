@@ -1,4 +1,5 @@
 import { getSchools } from "@/lib/repository";
+import { DatePickerField } from "@/components/date-picker-field";
 
 export async function FilterBar({
   schoolId,
@@ -46,12 +47,12 @@ export async function FilterBar({
         <option value="4B3B">4B3B</option>
         <option value="4B4B">4B4B</option>
       </select>
-      <input
+      <DatePickerField
         name="moveInDate"
-        type="date"
         defaultValue={moveInDate}
-        aria-label="Move-in date"
-        className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none"
+        ariaLabel="Move-in date"
+        placeholder="Move-in date"
+        buttonClassName="rounded-2xl border-cyan-200 px-4 py-3 focus:border-cyan-500"
       />
       <select name="listingType" defaultValue={listingType} className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none">
         <option value="">Listing type</option>
