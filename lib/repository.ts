@@ -328,6 +328,35 @@ export async function createUserByEmailPassword(input: {
   return mapUser(user);
 }
 
+export async function updateUserProfile(
+  userId: string,
+  input: {
+    schoolId?: string;
+    phone?: string;
+    wechat?: string;
+  },
+): Promise<User | null> {
+  const existing = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+  if (!existing) return null;
+
+  if (input.schoolId) {
+    await ensureSchoolExists(input.schoolId);
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      schoolId: input.schoolId?.trim() ? input.schoolId.trim() : null,
+      phone: input.phone?.trim() ? input.phone.trim() : null,
+      wechat: input.wechat?.trim() ? input.wechat.trim() : null,
+    },
+  });
+
+  return mapUser(user);
+}
+
 export async function getListings(filters: ListingFilters = {}): Promise<Listing[]> {
   const listings = await prisma.listing.findMany({
     where: {
