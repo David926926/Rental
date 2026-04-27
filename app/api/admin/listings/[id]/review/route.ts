@@ -13,19 +13,19 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
   const session = await getSessionUser();
   const currentUser = session ? await getUserById(session.id) : null;
   if (!session || !canAccessAdmin(currentUser)) {
-    return NextResponse.json({ error: "只有管理员可以审核房源" }, { status: 403 });
+    return NextResponse.json({ error: "Only admins can review listings" }, { status: 403 });
   }
 
   const { id } = await context.params;
   const parsed = reviewSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "审核参数不正确" }, { status: 400 });
+    return NextResponse.json({ error: "The review parameters are invalid" }, { status: 400 });
   }
 
   const review = await reviewListing(session.id, id, parsed.data.status, parsed.data.note);
   if (!review) {
-    return NextResponse.json({ error: "未找到待审核房源" }, { status: 404 });
+    return NextResponse.json({ error: "Pending listing not found" }, { status: 404 });
   }
 
-  return NextResponse.json({ message: "审核状态已更新" });
+  return NextResponse.json({ message: "Review status updated" });
 }

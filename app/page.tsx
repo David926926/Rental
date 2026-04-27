@@ -24,7 +24,7 @@ export default function HomePage() {
         <DormExMark />
 
         <p className="mt-4 max-w-2xl text-lg font-medium tracking-wide text-slate-600">
-          找房 · 联系 · 入住
+          Search · Connect · Move In
         </p>
 
         <div className="mt-6 grid w-full max-w-3xl gap-5 md:grid-cols-2">
@@ -35,10 +35,10 @@ export default function HomePage() {
             <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-cyan-600 text-white">
               <Home />
             </div>
-            <p className="text-3xl font-bold">浏览房源</p>
-            <p className="mt-3 text-sm leading-6 text-slate-700">查看学校附近的租房和转租信息。</p>
+            <p className="text-3xl font-bold">Browse Listings</p>
+            <p className="mt-3 text-sm leading-6 text-slate-700">Explore rentals and sublets near your school.</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-cyan-800">
-              开始找房 <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+              Start searching <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </span>
           </Link>
 
@@ -49,10 +49,10 @@ export default function HomePage() {
             <div className="mb-8 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 text-white">
               <KeyRound />
             </div>
-            <p className="text-3xl font-bold">发布房源</p>
-            <p className="mt-3 text-sm leading-6 text-slate-700">提交房源或转租信息，审核后展示给租客。</p>
+            <p className="text-3xl font-bold">Post a Listing</p>
+            <p className="mt-3 text-sm leading-6 text-slate-700">Submit a rental or sublet listing to be reviewed before it goes live.</p>
             <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-violet-800">
-              去发布 <ArrowRight size={16} className="transition group-hover:translate-x-1" />
+              Post now <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </span>
           </Link>
         </div>

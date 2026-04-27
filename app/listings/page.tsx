@@ -38,9 +38,9 @@ export default async function ListingsPage({
     <div className="mx-auto max-w-6xl px-6 py-12">
       <div className="mb-8">
         <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">Housing Search</p>
-        <h1 className="mt-3 text-4xl font-semibold text-slate-900">浏览房源</h1>
+        <h1 className="mt-3 text-4xl font-semibold text-slate-900">Browse Listings</h1>
         <p className="mt-3 max-w-2xl text-slate-600">
-          按学校、价格、房型、出租类型和可入住时间快速筛选已审核房源。
+          Quickly filter approved listings by school, price, layout, listing type, and move-in date.
         </p>
       </div>
 
@@ -60,7 +60,7 @@ export default async function ListingsPage({
           ))
         ) : (
           <div className="rounded-3xl border border-dashed border-slate-300 bg-white/70 p-8 text-slate-600">
-            当前筛选条件下没有公开房源，可以切换筛选条件或先发布需求。
+            No public listings match your current filters. Try adjusting them or post your own listing first.
           </div>
         )}
       </div>

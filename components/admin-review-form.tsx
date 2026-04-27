@@ -25,19 +25,19 @@ export function AdminReviewForm({ listingId }: { listingId: string }) {
         onChange={(event) => setStatus(event.target.value)}
         className="w-full rounded-2xl border border-slate-200 px-4 py-3"
       >
-        <option value="approved">审核通过</option>
-        <option value="rejected">驳回</option>
-        <option value="flagged">标记风险</option>
-        <option value="removed">下架</option>
+        <option value="approved">Approve</option>
+        <option value="rejected">Reject</option>
+        <option value="flagged">Flag risk</option>
+        <option value="removed">Remove</option>
       </select>
       <textarea
         value={note}
         onChange={(event) => setNote(event.target.value)}
-        placeholder="审核备注"
+        placeholder="Review note"
         className="min-h-24 w-full rounded-2xl border border-slate-200 px-4 py-3"
       />
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
-      <button className="w-full rounded-2xl bg-gradient-to-r from-emerald-600 to-cyan-600 px-4 py-3 font-medium text-white shadow-sm shadow-emerald-900/20 transition hover:from-emerald-700 hover:to-cyan-700">提交审核</button>
+      <button className="w-full rounded-2xl bg-gradient-to-r from-emerald-600 to-cyan-600 px-4 py-3 font-medium text-white shadow-sm shadow-emerald-900/20 transition hover:from-emerald-700 hover:to-cyan-700">Submit review</button>
     </form>
   );
 }

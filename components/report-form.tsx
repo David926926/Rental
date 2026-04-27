@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export function ReportForm({ listingId }: { listingId: string }) {
-  const [reason, setReason] = useState("疑似虚假房源");
+  const [reason, setReason] = useState("This listing may be misleading or fake.");
   const [message, setMessage] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -20,7 +20,7 @@ export function ReportForm({ listingId }: { listingId: string }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 className="text-lg font-semibold text-slate-900">举报房源</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Report listing</h3>
       <textarea
         value={reason}
         onChange={(event) => setReason(event.target.value)}
@@ -28,7 +28,7 @@ export function ReportForm({ listingId }: { listingId: string }) {
       />
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
       <button className="w-full rounded-2xl bg-rose-600 px-4 py-3 font-medium text-white">
-        提交举报
+        Submit report
       </button>
     </form>
   );

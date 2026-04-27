@@ -59,23 +59,23 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const session = await getSessionUser();
   if (!session) {
-    return NextResponse.json({ error: "请先登录后再发布" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in before posting a listing" }, { status: 401 });
   }
 
   const payload = (await request.json()) as ListingPayload;
   const schools = await getSchools();
   const schoolId = text(payload.schoolId) || schools[0]?.id || "nyu";
-  const contactEmail = text(payload.contactEmail) || "未填写";
-  const contactWechat = text(payload.contactWechat) || "未填写";
+  const contactEmail = text(payload.contactEmail) || "Not provided";
+  const contactWechat = text(payload.contactWechat) || "Not provided";
   const imageUrls = imageUrlsOrDefault(payload.imageUrls);
 
   try {
     await createListing({
-      title: text(payload.title) || "未命名房源",
-      description: text(payload.description) || "发布者暂未填写详细描述。",
-      city: text(payload.city) || "未填写",
-      area: text(payload.area) || "未填写",
-      address: text(payload.address) || "未填写",
+      title: text(payload.title) || "Untitled listing",
+      description: text(payload.description) || "The publisher has not added a detailed description yet.",
+      city: text(payload.city) || "Not provided",
+      area: text(payload.area) || "Not provided",
+      address: text(payload.address) || "Not provided",
       schoolId,
       rent: numberOrDefault(payload.rent, 0),
       distanceToSchool: optionalNumber(payload.distanceToSchool),
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       furnishing: true,
       allowsPets: false,
       type: listingTypeOrDefault(payload.type),
-      contactMethod: `邮箱 ${contactEmail} / 微信 ${contactWechat}`,
+      contactMethod: `Email ${contactEmail} / WeChat ${contactWechat}`,
       publisherId: session.id,
       images:
         imageUrls.length > 0
@@ -102,12 +102,12 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2003") {
-      return NextResponse.json({ error: "所选学校不存在，请先初始化学校数据后再发布。" }, { status: 400 });
+      return NextResponse.json({ error: "The selected school does not exist yet. Please initialize school data before posting." }, { status: 400 });
     }
 
     console.error(error);
-    return NextResponse.json({ error: "服务器保存房源时出错，请稍后重试。" }, { status: 500 });
+    return NextResponse.json({ error: "The server failed to save the listing. Please try again later." }, { status: 500 });
   }
 
-  return NextResponse.json({ message: "提交成功，房源已进入待审核状态。" }, { status: 201 });
+  return NextResponse.json({ message: "Submitted successfully. Your listing is now pending review." }, { status: 201 });
 }

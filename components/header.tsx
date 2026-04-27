@@ -2,9 +2,9 @@ import Link from "next/link";
 import { getSessionUser } from "@/lib/session";
 
 const navItems = [
-  { href: "/", label: "首页" },
-  { href: "/listings", label: "浏览房源" },
-  { href: "/publish", label: "发布房源" },
+  { href: "/", label: "Home" },
+  { href: "/listings", label: "Browse Listings" },
+  { href: "/publish", label: "Post a Listing" },
 ];
 
 export async function Header() {
@@ -30,19 +30,19 @@ export async function Header() {
                 {session.name} · {session.role}
               </span>
               <Link href="/profile" className="text-slate-600 hover:text-slate-900">
-                个人中心
+                Profile
               </Link>
             </>
           ) : (
             <div className="flex items-center gap-2">
               <Link href="/register" className="rounded-full border border-slate-300 px-4 py-2 font-medium text-slate-900 transition hover:bg-slate-50">
-                普通用户注册
+                Sign Up
               </Link>
               <Link
                 href="/login"
                 className="rounded-full bg-gradient-to-r from-cyan-600 to-violet-600 px-4 py-2 font-medium text-white shadow-sm shadow-violet-900/20 transition hover:from-cyan-700 hover:to-violet-700"
               >
-                登录入口
+                Log In
               </Link>
             </div>
           )}

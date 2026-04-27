@@ -5,8 +5,8 @@ import { hashPassword, validatePasswordStrength } from "@/lib/auth";
 import { serializeSession, sessionCookieName, sessionCookieOptions } from "@/lib/session";
 
 const registerSchema = z.object({
-  name: z.string().trim().min(2, "请输入至少 2 个字符的昵称"),
-  email: z.string().trim().email("请输入有效邮箱"),
+  name: z.string().trim().min(2, "Please enter a name with at least 2 characters"),
+  email: z.string().trim().email("Please enter a valid email address"),
   password: z.string(),
   confirmPassword: z.string(),
 });
@@ -14,7 +14,7 @@ const registerSchema = z.object({
 export async function POST(request: Request) {
   const parsed = registerSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "注册信息不完整" }, { status: 400 });
+    return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Registration information is incomplete" }, { status: 400 });
   }
 
   const { name, email, password, confirmPassword } = parsed.data;
@@ -24,12 +24,12 @@ export async function POST(request: Request) {
   }
 
   if (password !== confirmPassword) {
-    return NextResponse.json({ error: "两次输入的密码不一致" }, { status: 400 });
+    return NextResponse.json({ error: "The two passwords do not match" }, { status: 400 });
   }
 
   const existingUser = await getUserByEmail(email);
   if (existingUser) {
-    return NextResponse.json({ error: "该邮箱已经注册过了" }, { status: 409 });
+    return NextResponse.json({ error: "This email address is already registered" }, { status: 409 });
   }
 
   const passwordHash = await hashPassword(password);
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     passwordHash,
   });
 
-  const response = NextResponse.json({ message: "注册成功" }, { status: 201 });
+  const response = NextResponse.json({ message: "Registration successful" }, { status: 201 });
   response.cookies.set(sessionCookieName, serializeSession({
     id: user.id,
     name: user.name,

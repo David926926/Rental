@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 export function ContactForm({ listingId }: { listingId: string }) {
-  const [message, setMessage] = useState("你好，我对这个房源感兴趣，想了解更多细节。");
+  const [message, setMessage] = useState("Hi, I'm interested in this listing and would like to learn more details.");
   const [feedback, setFeedback] = useState("");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -15,12 +15,12 @@ export function ContactForm({ listingId }: { listingId: string }) {
     });
 
     const data = (await response.json()) as { error?: string; message?: string };
-    setFeedback(data.message ?? data.error ?? "提交失败");
+    setFeedback(data.message ?? data.error ?? "Submission failed");
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
-      <h3 className="text-lg font-semibold text-slate-900">留言联系</h3>
+      <h3 className="text-lg font-semibold text-slate-900">Send a message</h3>
       <textarea
         value={message}
         onChange={(event) => setMessage(event.target.value)}
@@ -28,7 +28,7 @@ export function ContactForm({ listingId }: { listingId: string }) {
       />
       {feedback ? <p className="text-sm text-slate-600">{feedback}</p> : null}
       <button className="w-full rounded-2xl bg-emerald-600 px-4 py-3 font-medium text-white">
-        发送联系请求
+        Send contact request
       </button>
     </form>
   );

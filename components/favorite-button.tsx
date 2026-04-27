@@ -17,7 +17,7 @@ export function FavoriteButton({ listingId }: { listingId: string }) {
         onClick={handleClick}
         className="w-full rounded-2xl border border-slate-300 px-4 py-3 font-medium text-slate-900"
       >
-        收藏房源
+        Save listing
       </button>
       {message ? <p className="text-sm text-slate-500">{message}</p> : null}
     </div>

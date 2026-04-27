@@ -7,7 +7,7 @@ export async function GET() {
   const session = await getSessionUser();
   const currentUser = session ? await getUserById(session.id) : null;
   if (!session || !canAccessAdmin(currentUser)) {
-    return NextResponse.json({ error: "没有权限" }, { status: 403 });
+    return NextResponse.json({ error: "Permission denied" }, { status: 403 });
   }
 
   return NextResponse.json({ data: await getListings() });

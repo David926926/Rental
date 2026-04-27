@@ -17,22 +17,22 @@ export async function POST(request: Request) {
   try {
     const session = await getSessionUser();
     if (!session) {
-      return NextResponse.json({ error: "请先登录后再上传图片" }, { status: 401 });
+      return NextResponse.json({ error: "Please log in before uploading images" }, { status: 401 });
     }
 
     const formData = await request.formData();
     const file = formData.get("file");
 
     if (!(file instanceof File)) {
-      return NextResponse.json({ error: "请选择要上传的图片文件" }, { status: 400 });
+      return NextResponse.json({ error: "Please choose an image file to upload" }, { status: 400 });
     }
 
     if (!ALLOWED_TYPES.has(file.type)) {
-      return NextResponse.json({ error: "仅支持 JPG、PNG、WEBP 图片" }, { status: 400 });
+      return NextResponse.json({ error: "Only JPG, PNG, and WEBP images are supported" }, { status: 400 });
     }
 
     if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json({ error: "图片大小不能超过 5MB" }, { status: 400 });
+      return NextResponse.json({ error: "Image size must be 5MB or less" }, { status: 400 });
     }
 
     const arrayBuffer = await file.arrayBuffer();
@@ -49,13 +49,13 @@ export async function POST(request: Request) {
 
     if (uploadError) {
       console.error(uploadError);
-      return NextResponse.json({ error: "上传图片失败，请稍后重试" }, { status: 500 });
+      return NextResponse.json({ error: "Image upload failed. Please try again later." }, { status: 500 });
     }
 
     const { data } = supabaseServer.storage.from(storageBucketName).getPublicUrl(path);
 
     return NextResponse.json({
-      message: "图片上传成功",
+      message: "Image uploaded successfully",
       data: {
         path,
         publicUrl: data.publicUrl,
@@ -63,6 +63,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "图片上传服务暂时不可用，请稍后重试。" }, { status: 500 });
+    return NextResponse.json({ error: "The image upload service is temporarily unavailable. Please try again later." }, { status: 500 });
   }
 }

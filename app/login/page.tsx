@@ -13,9 +13,9 @@ export default async function LoginPage({
       <div className="space-y-5">
         <div>
           <p className="text-sm uppercase tracking-[0.25em] text-emerald-700">Account Access</p>
-          <h1 className="mt-3 text-4xl font-semibold text-slate-900">选择你的登录身份</h1>
+          <h1 className="mt-3 text-4xl font-semibold text-slate-900">Choose your login role</h1>
           <p className="mt-3 text-slate-600">
-            登录后可以发布房源、收藏房源、联系发布者或进入对应的管理页面。
+            After logging in, you can post listings, save favorites, contact publishers, or access the appropriate admin pages.
           </p>
         </div>
 
@@ -24,9 +24,9 @@ export default async function LoginPage({
             href="/login"
             className={`block rounded-[2rem] border-2 p-5 shadow-sm transition ${mode === "user" ? "border-cyan-400 bg-cyan-50 text-slate-900 shadow-cyan-900/10" : "border-slate-200 bg-white hover:border-cyan-200"}`}
           >
-            <p className="text-xl font-semibold">普通用户</p>
+            <p className="text-xl font-semibold">User</p>
             <p className={`mt-2 text-sm leading-6 ${mode === "user" ? "text-slate-700" : "text-slate-600"}`}>
-              浏览房源、发布转租信息、收藏感兴趣的房源。
+              Browse listings, post sublets, and save homes you are interested in.
             </p>
           </a>
 
@@ -34,9 +34,9 @@ export default async function LoginPage({
             href="/login?mode=admin"
             className={`block rounded-[2rem] border-2 p-5 shadow-sm transition ${mode === "admin" ? "border-emerald-400 bg-emerald-50 text-slate-900 shadow-emerald-900/10" : "border-slate-200 bg-white hover:border-emerald-200"}`}
           >
-            <p className="text-xl font-semibold">管理员</p>
+            <p className="text-xl font-semibold">Admin</p>
             <p className={`mt-2 text-sm leading-6 ${mode === "admin" ? "text-slate-700" : "text-slate-600"}`}>
-              审核房源内容，维护平台信息质量。
+              Review listing content and maintain platform quality.
             </p>
           </a>
         </div>

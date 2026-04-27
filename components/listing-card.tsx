@@ -18,7 +18,7 @@ export function ListingCard({
       <div className="relative h-56">
         <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
         <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-slate-700">
-          {listing.type === "shared" ? "单间" : "整套"}
+          {listing.type === "shared" ? "Private room" : "Entire place"}
         </div>
       </div>
       <div className="space-y-4 p-5">
@@ -28,7 +28,7 @@ export function ListingCard({
             <span className="text-lg font-bold text-emerald-700">{formatCurrency(listing.rent)}</span>
           </div>
           <p className="text-sm text-slate-600">
-            {listing.city} · {listing.area} · {school?.name ?? "未绑定学校"}
+            {listing.city} · {listing.area} · {school?.name ?? "No school selected"}
             {typeof listing.distanceToSchool === "number" ? ` · ${listing.distanceToSchool} km` : ""}
           </p>
         </div>
@@ -39,9 +39,9 @@ export function ListingCard({
         </div>
         <p className="line-clamp-2 text-sm leading-6 text-slate-600">{listing.description}</p>
         <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-500">{publisher?.name ?? "匿名发布者"}</span>
+          <span className="text-slate-500">{publisher?.name ?? "Anonymous publisher"}</span>
           <Link href={`/listings/${listing.id}`} className="font-medium text-slate-900 hover:text-emerald-700">
-            查看详情
+            View details
           </Link>
         </div>
       </div>

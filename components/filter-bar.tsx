@@ -20,7 +20,7 @@ export async function FilterBar({
   return (
     <form className="grid gap-3 rounded-3xl border-2 border-cyan-100 bg-white p-5 shadow-sm shadow-cyan-900/5 md:grid-cols-6">
       <select name="schoolId" defaultValue={schoolId} className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none">
-        <option value="">学校</option>
+        <option value="">School</option>
         {schools.map((school) => (
           <option key={school.id} value={school.id}>
             {school.name}
@@ -30,11 +30,11 @@ export async function FilterBar({
       <input
         name="maxRent"
         defaultValue={maxRent}
-        placeholder="最高价格"
+        placeholder="Max price"
         className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none"
       />
       <select name="housingType" defaultValue={housingType} className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none">
-        <option value="">房型</option>
+        <option value="">Layout</option>
         <option value="Studio">Studio</option>
         <option value="1B1B">1B1B</option>
         <option value="2B1B">2B1B</option>
@@ -50,21 +50,21 @@ export async function FilterBar({
         name="moveInDate"
         type="date"
         defaultValue={moveInDate}
-        aria-label="可入住时间"
+        aria-label="Move-in date"
         className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none"
       />
       <select name="listingType" defaultValue={listingType} className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none">
-        <option value="">出租类型</option>
-        <option value="shared">单间</option>
-        <option value="sublet">整套</option>
+        <option value="">Listing type</option>
+        <option value="shared">Private room</option>
+        <option value="sublet">Entire place</option>
       </select>
       <select name="sort" defaultValue={sort} className="rounded-2xl border border-cyan-200 px-4 py-3 focus:border-cyan-500 focus:outline-none">
-        <option value="latest">排序方式</option>
-        <option value="distance_asc">距离优先</option>
-        <option value="rent_asc">低价优先</option>
+        <option value="latest">Sort by</option>
+        <option value="distance_asc">Nearest first</option>
+        <option value="rent_asc">Lowest price first</option>
       </select>
       <button className="rounded-2xl bg-gradient-to-r from-cyan-600 to-violet-600 px-4 py-3 font-medium text-white shadow-sm shadow-violet-900/20 transition hover:from-cyan-700 hover:to-violet-700 md:col-span-6">
-        更新筛选
+        Update filters
       </button>
     </form>
   );

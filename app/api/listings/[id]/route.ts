@@ -7,7 +7,7 @@ export async function GET(_: Request, context: { params: Promise<{ id: string }>
   const { id } = await context.params;
   const listing = await getListingById(id);
   if (!listing) {
-    return NextResponse.json({ error: "未找到房源" }, { status: 404 });
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
   return NextResponse.json({ data: listing });
 }
@@ -23,23 +23,23 @@ const updateSchema = z.object({
 export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
   const session = await getSessionUser();
   if (!session) {
-    return NextResponse.json({ error: "请先登录后再编辑房源" }, { status: 401 });
+    return NextResponse.json({ error: "Please log in before editing a listing" }, { status: 401 });
   }
 
   const { id } = await context.params;
   const listing = await getListingById(id);
   if (!listing) {
-    return NextResponse.json({ error: "未找到房源" }, { status: 404 });
+    return NextResponse.json({ error: "Listing not found" }, { status: 404 });
   }
   if (listing.publisherId !== session.id && session.role !== "admin") {
-    return NextResponse.json({ error: "你没有权限修改这个房源" }, { status: 403 });
+    return NextResponse.json({ error: "You do not have permission to edit this listing" }, { status: 403 });
   }
 
   const parsed = updateSchema.safeParse(await request.json());
   if (!parsed.success) {
-    return NextResponse.json({ error: "更新字段格式不正确" }, { status: 400 });
+    return NextResponse.json({ error: "The update fields are invalid" }, { status: 400 });
   }
 
   const updated = await updateListing(id, parsed.data);
-  return NextResponse.json({ message: "房源信息已更新", data: updated });
+  return NextResponse.json({ message: "Listing updated successfully", data: updated });
 }

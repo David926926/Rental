@@ -8,20 +8,20 @@ export async function POST(request: Request) {
   const email = body.email?.trim();
   const password = body.password ?? "";
   if (!email || !password) {
-    return NextResponse.json({ error: "请输入邮箱和密码" }, { status: 400 });
+    return NextResponse.json({ error: "Please enter both email and password" }, { status: 400 });
   }
 
   const user = await getUserWithPasswordByEmail(email);
   if (!user || !user.passwordHash) {
-    return NextResponse.json({ error: "账号或密码错误" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
 
   const isValid = await verifyPassword(password, user.passwordHash);
   if (!isValid) {
-    return NextResponse.json({ error: "账号或密码错误" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid email or password" }, { status: 401 });
   }
 
-  const response = NextResponse.json({ message: "登录成功" });
+  const response = NextResponse.json({ message: "Login successful" });
   response.cookies.set(sessionCookieName, serializeSession({
     id: user.id,
     name: user.name,

@@ -3,13 +3,13 @@ import "./globals.css";
 import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
-  title: "DormEx | 学生租房与转租平台",
-  description: "面向学生、留学生和年轻租客的租房与转租平台。",
+  title: "DormEx | Student Housing and Sublet Platform",
+  description: "A housing and sublet platform for students, international students, and young renters.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body>
         <Header />
         <main>{children}</main>

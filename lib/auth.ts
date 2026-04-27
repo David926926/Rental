@@ -13,7 +13,7 @@ export async function verifyPassword(password: string, passwordHash: string) {
 
 export function validatePasswordStrength(password: string) {
   if (password.length < PASSWORD_MIN_LENGTH) {
-    return `密码至少需要 ${PASSWORD_MIN_LENGTH} 位`;
+    return `Password must be at least ${PASSWORD_MIN_LENGTH} characters long`;
   }
   return null;
 }
